@@ -69,11 +69,12 @@ def do_run(page, base, query, cfg, answers, wrong_first=False, condition_reply=N
     page.check(f'input[value="{right}"]')
     page.click("#next")
 
-    for ans in answers:  # one entry per grid; None = let it time out blank
+    for ans in answers:  # one entry per grid; None = try to submit blank, then let it time out
         page.wait_for_selector("#ans", timeout=10000)
+        assert page.is_disabled("#submit")
         if ans is not None:
             page.fill("#ans", str(ans))
-            page.press("#ans", "Enter")
+        page.press("#ans", "Enter")
         page.wait_for_selector("#ans", state="detached", timeout=10000)
 
     page.wait_for_selector("text=Almost done")

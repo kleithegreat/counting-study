@@ -181,7 +181,7 @@
       <p>You will see <b>${nTotal} grids</b> of digits, one at a time. For each grid, count how many times the digit
       <b>7</b> appears, type the number, and press <b>Enter</b> (or click Submit).</p>
       <p>Each grid has a <b>${CFG.SECONDS_PER_GRID}-second</b> time limit (shown at the top right). When time runs out,
-      whatever you have typed is submitted automatically and the next grid appears. A blank answer counts as wrong.</p>
+      whatever you have typed is submitted automatically and the next grid appears.</p>
       <div class="bonus">${bonusText(false)}</div>
       <p class="muted">Bonuses are paid through Prolific within a week after the study closes.</p>
       <div class="row"><button class="btn" id="next">Continue</button></div>`);
@@ -262,11 +262,12 @@
         <form class="answer" id="form" autocomplete="off">
           <label for="ans">Number of 7s:</label>
           <input id="ans" type="number" inputmode="numeric" min="0" max="100" step="1">
-          <button class="btn" type="submit">Submit</button>
+          <button class="btn" id="submit" type="submit" disabled>Submit</button>
         </form>`);
       const canvas = document.getElementById("grid");
       drawGrid(canvas, grid.cells);
       const input = document.getElementById("ans");
+      const submitBtn = document.getElementById("submit");
       const timerEl = document.getElementById("timer");
       const barEl = document.getElementById("bar");
       input.focus();
@@ -275,6 +276,7 @@
       let firstInputMs = null, nEdits = 0, hiddenCount = 0, done = false;
       input.addEventListener("input", () => {
         nEdits += 1;
+        submitBtn.disabled = !/^\d+$/.test(input.value.trim());
         if (firstInputMs === null) firstInputMs = Math.round(performance.now() - t0);
       });
       const onVis = () => { if (document.hidden) hiddenCount += 1; };
@@ -316,7 +318,7 @@
 
       document.getElementById("form").onsubmit = (e) => {
         e.preventDefault();
-        if (input.value.trim() === "") { input.focus(); return; } // ignore empty manual submits
+        if (submitBtn.disabled) { input.focus(); return; }
         finish(false);
       };
     });
