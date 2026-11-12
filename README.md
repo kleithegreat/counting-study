@@ -4,7 +4,7 @@ Team Katseye: Kevin Lei (kl2344), Kyungmin Nam (kn467), Brittany Sun (bs835)
 
 Workers count the 7s in 9 grids of digits (25 s per grid): 8 counting grids plus one easy attention-check
 grid that is mixed in unannounced. The bonus needs 7+ of the 9 correct. Half get a fixed $0.25 bonus;
-half get entered into a draw for one $4 prize.
+half get entered into a draw for one $3 prize.
 Prolific recruits and pays. The task itself is a static web page on GitHub Pages
 (https://kleithegreat.github.io/counting-study/), and data is saved through DataPipe to Google Drive.
 
@@ -40,13 +40,20 @@ The repo name is deliberately neutral, because participants can see the URL.
 | Devices | Desktop only |
 | Estimated time | 4 minutes |
 | Reward | $0.54 (= $8.10/hr, Prolific's minimum) |
-| Places | **10** first (soft launch), then raise to **60** |
+| Places | **10** first (soft launch), then raise to **50** |
 | Suggested filters | approval rate >= 95%, fluent English |
 
-Suggested listing text:
-> **Count the 7s (about 4 minutes)**. Count how many times the digit 7 appears in a series of grids of
-> digits. Each grid has a 25-second time limit. You can earn a bonus for accurate counting; the details
-> are shown at the start. Please use a laptop or desktop computer.
+Title: **Count the 7s (about 4 minutes)**
+
+Description:
+> In this short study you will see 9 grids of digits, one at a time, and count how many times the digit 7
+> appears in each. Each grid has a 25-second time limit, shown on screen.
+>
+> You can earn a bonus for accurate counting. The details are shown at the start of the study.
+>
+> Please use a laptop or desktop computer and complete the study in one sitting. You will only be paid if
+> you complete the entire task. We record your answers, response times and Prolific ID; we do not collect
+> your name or contact details. If you have questions, please message us through Prolific.
 
 Don't describe the two bonus versions in the listing. Each person should only see their own.
 
@@ -67,7 +74,7 @@ Publish with 10 places. When they finish, check:
 - the score spread: run the analysis (below) and look at `bonus_rate`. Roughly 30-70% should qualify.
   If almost nobody or almost everybody qualifies, change the threshold **before** adding places.
 
-If nothing changes, keep those 10 in the data and raise places to 60.
+If nothing changes, keep those 10 in the data and raise places to 50.
 
 ## After data collection
 

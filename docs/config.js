@@ -15,8 +15,8 @@ window.STUDY_CONFIG = {
   READY_MS: 800,               // "Get ready" pause between grids
   BONUS_THRESHOLD: 7,          // out of all grids shown, the easy attention grid included
   FIXED_BONUS: "$0.25",
-  LOTTERY_PRIZE: "$4",
-  PARTICIPANTS_PER_CONDITION: 30,
+  LOTTERY_PRIZE: "$3",
+  PARTICIPANTS_PER_CONDITION: 25,
   EST_MINUTES: 4,
 
   // DataPipe condition number -> condition name.

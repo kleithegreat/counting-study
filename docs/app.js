@@ -396,11 +396,10 @@
   }
 
   function screenLocalDone(payload) {
-    const scored = state.trials.filter((t) => t.kind === "scored");
-    const nCorrect = scored.filter((t) => t.correct).length;
+    const nCorrect = state.trials.filter((t) => t.correct).length;
     render(`<h1>Local test finished</h1>
       <p class="muted">DATAPIPE_EXPERIMENT_ID is not set, so nothing was saved. This screen is only shown in local test mode.</p>
-      <p>Condition: <b>${esc(state.meta.condition)}</b> &middot; scored grids correct: <b>${nCorrect}/${scored.length}</b></p>
+      <p>Condition: <b>${esc(state.meta.condition)}</b> &middot; grids correct: <b>${nCorrect}/${state.trials.length}</b> (bonus needs ${CFG.BONUS_THRESHOLD})</p>
       <div class="row">${downloadButton(payload, dataFilename())}</div>
       <pre style="white-space:pre-wrap;font-size:12px;max-height:300px;overflow:auto">${esc(JSON.stringify(state, null, 2))}</pre>`);
   }

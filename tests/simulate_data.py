@@ -1,6 +1,6 @@
 """Make fake participant files in the same format the page saves, to test analyze.py.
 
-    python tests/simulate_data.py OUT_DIR [--n 30] [--effect 0.08]
+    python tests/simulate_data.py OUT_DIR [--n 25] [--effect 0.08]
 
 Also writes OUT_DIR/../prolific_export.csv with one extra submission that has no
 data file, so the Prolific cross-check has something to catch.
@@ -47,7 +47,7 @@ def person(rng, grids, pid, condition, effect, t0):
         "condition_source": "datapipe", "started_at": t0.isoformat(),
         "finished_at": (t0 + timedelta(minutes=4)).isoformat(), "user_agent": "sim", "screen": "1920x1080",
         "viewport": "1400x900", "seconds_per_grid": 25, "bonus_threshold": 7,
-        "fixed_bonus": "$0.25", "lottery_prize": "$4", "comprehension_attempts": rng.choice([1, 1, 1, 2]),
+        "fixed_bonus": "$0.25", "lottery_prize": "$3", "comprehension_attempts": rng.choice([1, 1, 1, 2]),
         "instructions_ms": 20000, "effort_rating": rng.randint(4, 7), "comment": None,
         "grid_order": [g["id"] for g in order],
     }
@@ -57,7 +57,7 @@ def person(rng, grids, pid, condition, effect, t0):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("out", type=Path)
-    ap.add_argument("--n", type=int, default=30)
+    ap.add_argument("--n", type=int, default=25)
     ap.add_argument("--effect", type=float, default=0.08)
     ap.add_argument("--seed", type=int, default=1)
     args = ap.parse_args()

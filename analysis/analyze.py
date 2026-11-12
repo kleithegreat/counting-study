@@ -34,7 +34,7 @@ from scipy import stats
 warnings.filterwarnings("ignore")  # statsmodels convergence chatter on small samples
 
 FIXED_AMOUNT = 0.25
-LOTTERY_AMOUNT = 4.00
+LOTTERY_AMOUNT = 3.00
 COND_ORDER = ["fixed", "lottery"]
 COLORS = {"fixed": "#2a6fdb", "lottery": "#e8a400"}
 
