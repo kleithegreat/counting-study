@@ -8,7 +8,7 @@ window.STUDY_CONFIG = {
   DATAPIPE_EXPERIMENT_ID: "REPLACE_ME",
 
   // From Prolific: Study setup -> Study completion -> completion code.
-  PROLIFIC_COMPLETION_CODE: "REPLACE_ME",
+  PROLIFIC_COMPLETION_CODE: "C12XGGIW",
 
   // Task parameters (keep in sync with the proposal / Prolific listing).
   SECONDS_PER_GRID: 25,
