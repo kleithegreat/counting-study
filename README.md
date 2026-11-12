@@ -86,7 +86,7 @@ If nothing changes, keep those 10 in the data and raise places to 60.
    pass `--prolific-export`. Bonuses carry the same 33.3% platform fee, so top up the balance by about $10 first.
    - Bonus rule is exactly what participants were told: 8+ of 10 counting grids correct. It also applies to people
      excluded from the analysis, such as those who failed the attention check.
-   - The lottery winner is drawn with fixed seed **20261215**, written in the proposal ahead of time.
+   - The lottery winner is drawn with fixed seed **20261215**, committed to this repo before data collection.
      `results/lottery_draw.txt` lists everyone eligible and the winner, so anyone can re-run and check it.
 
 ### What the analysis does
