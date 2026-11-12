@@ -73,9 +73,11 @@ def score(people: pd.DataFrame, trials: pd.DataFrame) -> pd.DataFrame:
         tab_hidden=("tab_hidden_count", "sum"),
     )
     att = trials[trials.kind == "attention"].set_index("file")["correct"].rename("attention_pass")
+    shown = trials.groupby("file")["correct"].sum().rename("n_correct_shown")
     out = people.merge(per, left_on="file", right_index=True, how="left").merge(
-        att, left_on="file", right_index=True, how="left")
-    out["n_correct"] = out["n_correct"].fillna(0).astype(int)
+        att, left_on="file", right_index=True, how="left").merge(
+        shown, left_on="file", right_index=True, how="left")
+    out[["n_correct", "n_correct_shown"]] = out[["n_correct", "n_correct_shown"]].fillna(0).astype(int)
     return out
 
 
@@ -84,7 +86,6 @@ def apply_exclusions(p: pd.DataFrame) -> pd.DataFrame:
     p["exclusion"] = ""
     dup = p.duplicated("pid", keep="first")
     p.loc[dup, "exclusion"] = "duplicate (kept first attempt)"
-    p.loc[(p.exclusion == "") & (p.n_grids < p.n_scored), "exclusion"] = "incomplete"
     p.loc[(p.exclusion == "") & (p.attention_pass != True), "exclusion"] = "failed attention check"  # noqa: E712
     p.loc[(p.exclusion == "") & (p.n_blank >= 5), "exclusion"] = "5+ blank answers"
     p["included"] = p.exclusion == ""
@@ -92,11 +93,12 @@ def apply_exclusions(p: pd.DataFrame) -> pd.DataFrame:
 
 
 def bonuses(p: pd.DataFrame, seed: int, out: Path, submission_ids: dict | None) -> pd.DataFrame:
-    """Bonus rule is the one shown to participants: >= threshold correct of the scored grids.
+    """Bonus rule is the one shown to participants: >= threshold correct of ALL grids shown,
+    the unannounced attention grid included.
     It applies to everyone who completed the task, including people excluded from analysis."""
     p = p.copy()
     first = ~p.duplicated("pid", keep="first")
-    p["bonus_eligible"] = first & (p.n_correct >= p.bonus_threshold)
+    p["bonus_eligible"] = first & (p.n_correct_shown >= p.bonus_threshold)
     p["bonus_usd"] = 0.0
     p.loc[p.bonus_eligible & (p.condition == "fixed"), "bonus_usd"] = FIXED_AMOUNT
 
@@ -182,7 +184,7 @@ def run_stats(p: pd.DataFrame, trials: pd.DataFrame) -> list[str]:
         abs_error_mean=("mean_abs_error", "mean"),
         seconds_per_grid=("mean_rt_s", "mean"),
         timeouts_per_person=("n_timeouts", "mean"),
-        bonus_rate=("n_correct", lambda s: (s >= inc.bonus_threshold.iloc[0]).mean()),
+        bonus_rate=("bonus_eligible", "mean"),
         effort_rating=("effort_rating", "mean"),
     ).reindex(COND_ORDER)
     md += ["## Descriptives (included participants)", "", desc.round(2).to_markdown(), ""]
@@ -227,15 +229,18 @@ def run_stats(p: pd.DataFrame, trials: pd.DataFrame) -> list[str]:
 
 def figures(p: pd.DataFrame, trials: pd.DataFrame, out: Path):
     inc = p[p.included]
+    n_scored = trials.loc[trials.kind == "scored", "grid_id"].nunique()
+    # Included people all passed the attention grid, so it already counts 1 toward the bonus.
+    thr = inc.bonus_threshold.iloc[0] - 1
     fig, ax = plt.subplots(figsize=(6.5, 3.6))
-    xs = np.arange(0, 11)
+    xs = np.arange(0, n_scored + 1)
     for k, c in enumerate(COND_ORDER):
         counts = inc.loc[inc.condition == c, "n_correct"].value_counts().reindex(xs, fill_value=0)
         ax.bar(xs + (k - 0.5) * 0.4, counts.values, width=0.4, label=c, color=COLORS[c])
     ax.set_xticks(xs)
-    ax.axvline(inc.bonus_threshold.iloc[0] - 0.5, color="#555", ls="--", lw=1)
-    ax.text(inc.bonus_threshold.iloc[0] - 0.4, ax.get_ylim()[1] * 0.92, "bonus threshold", fontsize=9, color="#555")
-    ax.set_xlabel("Grids counted exactly right (of 10)")
+    ax.axvline(thr - 0.5, color="#555", ls="--", lw=1)
+    ax.text(thr - 0.4, ax.get_ylim()[1] * 0.92, "bonus threshold", fontsize=9, color="#555")
+    ax.set_xlabel(f"Grids counted exactly right (of {n_scored})")
     ax.set_ylabel("Participants")
     ax.legend(frameon=False)
     ax.spines[["top", "right"]].set_visible(False)
@@ -276,7 +281,7 @@ def main():
     p = bonuses(p, args.seed, args.out, submission_ids)
 
     keep = ["pid", "condition", "condition_source", "n_correct", "n_grids", "mean_abs_error", "mean_rt_s",
-            "n_timeouts", "n_blank", "attention_pass", "comprehension_attempts", "effort_rating",
+            "n_correct_shown", "n_timeouts", "n_blank", "attention_pass", "comprehension_attempts", "effort_rating",
             "tab_hidden", "included", "exclusion", "bonus_eligible", "bonus_usd", "started_at", "file", "comment"]
     p[keep].to_csv(args.out / "participants.csv", index=False)
     trials.to_csv(args.out / "trials.csv", index=False)

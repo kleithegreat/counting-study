@@ -25,7 +25,7 @@ def person(rng, grids, pid, condition, effect, t0):
     rng.shuffle(order)
     trials = []
     for i, g in enumerate(order):
-        limit = 10000 if g["kind"] == "attention" else 25000
+        limit = 25000
         if g["kind"] == "attention":
             ok = rng.random() < 0.95
         else:
@@ -45,8 +45,8 @@ def person(rng, grids, pid, condition, effect, t0):
         "version": "1.0.0", "prolific_pid": pid, "study_id": "sim", "session_id": "sim",
         "participant_id": pid, "test_run": False, "local_mode": False, "condition": condition,
         "condition_source": "datapipe", "started_at": t0.isoformat(),
-        "finished_at": (t0 + timedelta(minutes=5)).isoformat(), "user_agent": "sim", "screen": "1920x1080",
-        "viewport": "1400x900", "seconds_per_grid": 25, "bonus_threshold": 8, "n_scored": 10,
+        "finished_at": (t0 + timedelta(minutes=4)).isoformat(), "user_agent": "sim", "screen": "1920x1080",
+        "viewport": "1400x900", "seconds_per_grid": 25, "bonus_threshold": 7,
         "fixed_bonus": "$0.25", "lottery_prize": "$4", "comprehension_attempts": rng.choice([1, 1, 1, 2]),
         "instructions_ms": 20000, "effort_rating": rng.randint(4, 7), "comment": None,
         "grid_order": [g["id"] for g in order],

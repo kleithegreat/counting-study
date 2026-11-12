@@ -18,10 +18,9 @@ from pathlib import Path
 SEED = 5306
 ROWS = COLS = 10
 TARGET = 7
-N_SCORED = 10
-# Target counts for the 10 scored grids: spread 8..20, all distinct so a
+# Target counts for the scored grids: spread 8..20, all distinct so a
 # worker can't guess a common answer.
-TARGET_COUNTS = [8, 9, 11, 12, 13, 14, 15, 17, 18, 20]
+TARGET_COUNTS = [8, 10, 11, 13, 15, 16, 18, 20]
 # Distractor mix: half the non-targets are the look-alike digits 1 and 4,
 # the rest are other digits. Keeps the task effortful but not impossible.
 LOOKALIKES = [1, 4]
@@ -107,7 +106,7 @@ def main() -> None:
         for g in grids:
             render_png(g["cells"], out / f"{g['id']}.png")
 
-    print(f"Wrote {len(grids)} grids ({N_SCORED} scored + 1 attention check).")
+    print(f"Wrote {len(grids)} grids ({len(TARGET_COUNTS)} scored + 1 attention check).")
 
 
 if __name__ == "__main__":

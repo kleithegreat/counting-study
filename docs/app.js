@@ -1,7 +1,7 @@
-/* Counting study: lottery vs fixed bonus (CS 5306 Project 3).
+/* Counting study: lottery vs fixed bonus.
  *
  * Flow: consent -> condition assignment -> instructions -> comprehension check
- *       -> 11 timed grids (10 scored + 1 attention check, random order)
+ *       -> timed grids in random order (scored grids + one unannounced easy attention grid)
  *       -> effort question -> save to DataPipe -> redirect to Prolific.
  *
  * URL parameters:
@@ -39,7 +39,6 @@
       viewport: `${window.innerWidth}x${window.innerHeight}`,
       seconds_per_grid: CFG.SECONDS_PER_GRID,
       bonus_threshold: CFG.BONUS_THRESHOLD,
-      n_scored: CFG.N_SCORED,
       fixed_bonus: CFG.FIXED_BONUS,
       lottery_prize: CFG.LOTTERY_PRIZE,
       comprehension_attempts: 0,
@@ -86,15 +85,15 @@
   const nTotal = window.GRIDS.length;
 
   function bonusText(compact) {
-    const t = CFG.BONUS_THRESHOLD, n = CFG.N_SCORED;
+    const t = CFG.BONUS_THRESHOLD, n = nTotal;
     if (state.meta.condition === "fixed") {
       return compact
         ? `<b>Bonus:</b> count at least ${t} of ${n} grids exactly right &rarr; you receive <b>${CFG.FIXED_BONUS}</b>.`
-        : `If you count at least <b>${t} of the ${n}</b> counting grids exactly right, you will receive a <b>${CFG.FIXED_BONUS} bonus</b>.`;
+        : `If you count at least <b>${t} of the ${n}</b> grids exactly right, you will receive a <b>${CFG.FIXED_BONUS} bonus</b>.`;
     }
     return compact
       ? `<b>Bonus:</b> count at least ${t} of ${n} grids exactly right &rarr; you enter a draw for one <b>${CFG.LOTTERY_PRIZE}</b> prize.`
-      : `If you count at least <b>${t} of the ${n}</b> counting grids exactly right, you will be entered into a <b>prize draw</b>. ` +
+      : `If you count at least <b>${t} of the ${n}</b> grids exactly right, you will be entered into a <b>prize draw</b>. ` +
         `One <b>${CFG.LOTTERY_PRIZE} prize</b> will be drawn at random from all qualifying participants in this version of the study ` +
         `(about ${CFG.PARTICIPANTS_PER_CONDITION} people take part in it).`;
   }
@@ -112,13 +111,13 @@
   function screenConsent() {
     render(`
       <h1>Counting study</h1>
-      <p>This is a short study run by students in a Cornell University course on crowdsourcing (CS 5306).
-      You will count how many times a digit appears in a series of grids. It takes about ${CFG.EST_MINUTES} minutes.</p>
+      <p>This is a short research study. You will count how many times a digit appears in a series of grids. It takes about ${CFG.EST_MINUTES} minutes.</p>
       <ul>
         <li>Base payment is made through Prolific. Some participants can also earn a bonus, explained on the next page.</li>
         <li>We record your answers, how long you take, and your Prolific ID (used only to pay bonuses). We do not collect your name or contact details.</li>
-        <li>Taking part is voluntary. You may stop at any time by closing this page and returning the study on Prolific.</li>
-        <li>Questions: contact ${esc(CFG.CONTACT)}.</li>
+        <li>Taking part is voluntary. You may stop at any time by closing this page and returning the study on Prolific.
+        Please note that you will only be paid if you complete the entire task.</li>
+        <li>Questions: please message us through Prolific's message system.</li>
       </ul>
       <p>Do you agree to take part?</p>
       <div class="row">
@@ -181,9 +180,8 @@
       <h1>Instructions</h1>
       <p>You will see <b>${nTotal} grids</b> of digits, one at a time. For each grid, count how many times the digit
       <b>7</b> appears, type the number, and press <b>Enter</b> (or click Submit).</p>
-      <p>Each counting grid has a <b>${CFG.SECONDS_PER_GRID}-second</b> time limit (shown at the top right). When time runs out,
+      <p>Each grid has a <b>${CFG.SECONDS_PER_GRID}-second</b> time limit (shown at the top right). When time runs out,
       whatever you have typed is submitted automatically and the next grid appears. A blank answer counts as wrong.</p>
-      <p>${CFG.N_SCORED} of the grids are counting grids. One extra grid is a quick check that you are paying attention.</p>
       <div class="bonus">${bonusText(false)}</div>
       <p class="muted">Bonuses are paid through Prolific within a week after the study closes.</p>
       <div class="row"><button class="btn" id="next">Continue</button></div>`);
@@ -202,7 +200,7 @@
     render(`
       <h1>Quick check</h1>
       ${wrongBefore ? `<p class="error">That's not right. Please read the bonus rule again:</p><div class="bonus">${bonusText(false)}</div>` : ""}
-      <p>What happens if you count at least ${CFG.BONUS_THRESHOLD} of the ${CFG.N_SCORED} counting grids exactly right?</p>
+      <p>What happens if you count at least ${CFG.BONUS_THRESHOLD} of the ${nTotal} grids exactly right?</p>
       ${options.map((o) => `<label class="choice"><input type="radio" name="cq" value="${o.key}"> ${esc(o.text)}</label>`).join("")}
       <div class="row"><button class="btn" id="next" disabled>Start counting</button></div>`);
     const btn = document.getElementById("next");
@@ -251,7 +249,7 @@
 
   function runOneTrial(grid, position) {
     return new Promise((resolve) => {
-      const limitSec = grid.kind === "attention" ? CFG.ATTENTION_SECONDS : CFG.SECONDS_PER_GRID;
+      const limitSec = CFG.SECONDS_PER_GRID;
       const limitMs = limitSec * 1000;
       render(`
         <div class="bonus compact">${bonusText(true)}</div>

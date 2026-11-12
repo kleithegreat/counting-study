@@ -34,7 +34,6 @@ def patched_config(experiment_id="REPLACE_ME", seconds=3):
     src = re.sub(r'DATAPIPE_EXPERIMENT_ID: "[^"]*"', f'DATAPIPE_EXPERIMENT_ID: "{experiment_id}"', src)
     src = re.sub(r'PROLIFIC_COMPLETION_CODE: "[^"]*"', 'PROLIFIC_COMPLETION_CODE: "TESTCODE1"', src)
     src = re.sub(r"SECONDS_PER_GRID: \d+", f"SECONDS_PER_GRID: {seconds}", src)
-    src = re.sub(r"ATTENTION_SECONDS: \d+", f"ATTENTION_SECONDS: {seconds}", src)
     return src
 
 
@@ -61,7 +60,6 @@ def do_run(page, base, query, cfg, answers, wrong_first=False, condition_reply=N
     page.click("#next")
 
     page.wait_for_selector("text=Quick check")
-    cond = page.evaluate("document.querySelector('.bonus') ? null : null")  # placeholder
     if wrong_first:
         page.check('input[value="none"]')
         page.click("#next")
@@ -88,7 +86,7 @@ def do_run(page, base, query, cfg, answers, wrong_first=False, condition_reply=N
 def main():
     OUT.mkdir(exist_ok=True)
     srv, base = serve()
-    answers = [12, 12, None, 3, 15, 8, 20, 9, 11, 14, 13]  # one blank -> timeout
+    answers = [12, 12, None, 3, 15, 8, 20, 9, 11]  # one blank -> timeout
     results = {}
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path=CHROME, args=["--no-sandbox"])
@@ -101,7 +99,7 @@ def main():
         data = page.evaluate("window.__STUDY_DATA__")
         assert data["meta"]["condition"] == "fixed" and right == "fixed"
         assert data["meta"]["comprehension_attempts"] == 2
-        assert len(data["trials"]) == 11
+        assert len(data["trials"]) == 9
         t_out = [t for t in data["trials"] if t["timed_out"]]
         assert len(t_out) == 1 and t_out[0]["answer"] is None and t_out[0]["rt_ms"] == 3000
         results["local"] = data

@@ -10,18 +10,14 @@ window.STUDY_CONFIG = {
   // From Prolific: Study setup -> Study completion -> completion code.
   PROLIFIC_COMPLETION_CODE: "C12XGGIW",
 
-  // Task parameters (keep in sync with the proposal / Prolific listing).
+  // Task parameters (keep in sync with the Prolific listing).
   SECONDS_PER_GRID: 25,
-  ATTENTION_SECONDS: 10,       // the easy attention-check grid
   READY_MS: 800,               // "Get ready" pause between grids
-  BONUS_THRESHOLD: 8,          // out of the 10 scored grids
-  N_SCORED: 10,
+  BONUS_THRESHOLD: 7,          // out of all grids shown, the easy attention grid included
   FIXED_BONUS: "$0.25",
   LOTTERY_PRIZE: "$4",
   PARTICIPANTS_PER_CONDITION: 30,
-  BASE_PAY: "$0.67",
-  EST_MINUTES: 5,
-  CONTACT: "the CS 5306 Project 3 team (Kevin Lei, Kyungmin Nam, Brittany Sun) via Prolific's message system",
+  EST_MINUTES: 4,
 
   // DataPipe condition number -> condition name.
   CONDITIONS: ["fixed", "lottery"],
