@@ -5,7 +5,7 @@ window.STUDY_CONFIG = {
   // From your DataPipe experiment dashboard (pipe.jspsych.org).
   // Leave as "REPLACE_ME" to run in local test mode (nothing is saved;
   // you get a download button with the data at the end instead).
-  DATAPIPE_EXPERIMENT_ID: "REPLACE_ME",
+  DATAPIPE_EXPERIMENT_ID: "3NXc8KaTmRbg",
 
   // From Prolific: Study setup -> Study completion -> completion code.
   PROLIFIC_COMPLETION_CODE: "C12XGGIW",
