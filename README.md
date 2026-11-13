@@ -61,8 +61,8 @@ Don't describe the two bonus versions in the listing. Each person should only se
 - To try the study yourself, always use `https://kleithegreat.github.io/counting-study/?test=1`. Test runs are saved as
   `TEST_...json`, which the analysis ignores. Add `&condition=lottery` or `&condition=fixed` to see each version.
 - Prolific's **Preview** checks the redirect back to Prolific, but it opens the plain study URL, so the run is saved as
-  real data. Afterwards, delete that file from the Google Drive folder. It has the newest timestamp and the
-  previewer's Prolific ID.
+  real data. Afterwards, delete that file from the Google Drive folder: it's the newest file, named with the
+  previewer's Prolific ID (or `anon-...` if Preview doesn't fill one in).
 
 ### 5. Soft launch, then full launch
 Publish with 10 places. When they finish, check:
