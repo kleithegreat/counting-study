@@ -60,13 +60,14 @@ def do_run(page, base, query, cfg, answers, wrong_first=False, condition_reply=N
     page.click("#next")
 
     page.wait_for_selector("text=Quick check")
+    right = "lottery" if "prize draw" in instr_text else "fixed"
+    check_text = page.inner_text("main")
+    assert ("draw" in check_text) == (right == "lottery") and ("$0.25" in check_text) == (right == "fixed"), check_text
     if wrong_first:
         page.check('input[value="none"]')
         page.click("#next")
         page.wait_for_selector("text=That's not right")
-    # pick the right answer by reading the instructions text we saw
-    right = "lottery" if "prize draw" in instr_text else "fixed"
-    page.check(f'input[value="{right}"]')
+    page.check('input[value="correct"]')
     page.click("#next")
 
     for ans in answers:  # one entry per grid; None = try to submit blank, then let it time out
@@ -150,7 +151,7 @@ def main():
             page.wait_for_selector("text=Instructions")
             page.screenshot(path=str(OUT / f"screen_instructions_{cond}.png"), full_page=True)
             page.click("#next")
-            page.check(f'input[value="{cond}"]')
+            page.check('input[value="correct"]')
             page.click("#next")
             page.wait_for_selector("#ans")
             page.wait_for_timeout(2500)

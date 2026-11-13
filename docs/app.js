@@ -192,11 +192,18 @@
   }
 
   function screenComprehension(wrongBefore) {
-    const options = shuffle([
-      { key: "fixed", text: `I receive a ${CFG.FIXED_BONUS} bonus.` },
-      { key: "lottery", text: `I am entered into a draw for a ${CFG.LOTTERY_PRIZE} prize.` },
-      { key: "none", text: "Nothing extra happens." },
-    ]);
+    // Options mention only this participant's own bonus, never the other condition's.
+    const options = shuffle(state.meta.condition === "fixed"
+      ? [
+          { key: "correct", text: `I receive a ${CFG.FIXED_BONUS} bonus.` },
+          { key: "wrong", text: `I receive ${CFG.FIXED_BONUS} for each grid I count exactly right.` },
+          { key: "none", text: "Nothing extra happens." },
+        ]
+      : [
+          { key: "correct", text: `I am entered into a draw for one ${CFG.LOTTERY_PRIZE} prize.` },
+          { key: "wrong", text: `I receive ${CFG.LOTTERY_PRIZE}.` },
+          { key: "none", text: "Nothing extra happens." },
+        ]);
     render(`
       <h1>Quick check</h1>
       ${wrongBefore ? `<p class="error">That's not right. Please read the bonus rule again:</p><div class="bonus">${bonusText(false)}</div>` : ""}
@@ -208,7 +215,7 @@
     btn.onclick = () => {
       state.meta.comprehension_attempts += 1;
       const val = app.querySelector('input[name="cq"]:checked').value;
-      if (val === state.meta.condition) runTrials();
+      if (val === "correct") runTrials();
       else screenComprehension(true);
     };
   }
