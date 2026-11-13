@@ -18,15 +18,14 @@ tests/       browser test + fake-data generator
 
 ## Launch checklist
 
-### 1. DataPipe: saves the data (about 10 min, one person)
-1. Sign in at https://pipe.jspsych.org.
-2. **Account settings -> Connect** next to **Google Drive** and sign in with the Google account that should hold the data.
-3. **New Experiment**: title "counting study", provider Google Drive.
-4. On the experiment dashboard:
-   - turn **Accept new data** ON,
-   - turn **Condition assignment** ON and set the number of conditions to **2**
-     (0 = fixed, 1 = lottery; DataPipe alternates 0, 1, 0, 1 so groups stay balanced).
-5. Copy the **experiment ID** into `docs/config.js` -> `DATAPIPE_EXPERIMENT_ID`.
+### 1. DataPipe: saves the data (done)
+Experiment `counting-study` at https://pipe.jspsych.org (ID `3NXc8KaTmRbg`, already in `docs/config.js`), saving to
+Google Drive. Dashboard settings:
+- **Accept new data**: ON.
+- **Assign conditions in sequence**: ON, 2 conditions (0 = fixed, 1 = lottery; DataPipe alternates 0, 1, 0, 1).
+- **Stop after a set number of sessions**: OFF (test runs count as sessions too).
+- **Check submissions before storing them**: JSON allowed, **no required fields**. The default `trial_type` field
+  is for jsPsych and would reject every submission.
 
 ### 2. GitHub Pages: hosts the page (done)
 Pages serves `/docs` from `main` at https://kleithegreat.github.io/counting-study/. Every push to `main` redeploys it within a minute or so.
@@ -36,7 +35,7 @@ The repo name is deliberately neutral, because participants can see the URL.
 | Setting | Value |
 | --- | --- |
 | Study URL | the GitHub Pages link above; choose **"I'll use URL parameters"** so Prolific appends `PROLIFIC_PID`, `STUDY_ID`, `SESSION_ID` |
-| Study completion | **"I'll redirect them using a URL"**; copy the code into `docs/config.js` -> `PROLIFIC_COMPLETION_CODE`, then push |
+| Study completion | **"I'll redirect them using a URL"**. The page sends people to `https://app.prolific.com/submissions/complete?cc=C12XGGIW`; if Prolific's completion code ever changes, update `PROLIFIC_COMPLETION_CODE` in `docs/config.js` and push |
 | Devices | Desktop only |
 | Estimated time | 4 minutes |
 | Reward | $0.54 (= $8.10/hr, Prolific's minimum) |
@@ -58,14 +57,12 @@ Description:
 Don't describe the two bonus versions in the listing. Each person should only see their own.
 
 ### 4. Test before launch
-- Open `https://kleithegreat.github.io/counting-study/?test=1` and run through it. Test runs are saved as `TEST_...json`
-  and don't use up DataPipe's condition counter. Add `&condition=lottery` or `&condition=fixed` to see each version.
-  Check that the file shows up in Google Drive.
-- Use Prolific's **Preview** to check the redirect back to Prolific.
-- Each teammate should do one full run and note their time and how many grids they got right. If careful
-  people can't finish a grid in 25 s, raise `SECONDS_PER_GRID` (and the time estimate and pay to match).
-- If `DATAPIPE_EXPERIMENT_ID` is still `REPLACE_ME`, the page runs in **local mode**. It saves nothing and shows
-  your data at the end. You can open `docs/index.html` directly in a browser to try it.
+**Any run without `?test=1` is saved as a real participant and uses up a condition slot.** So:
+- To try the study yourself, always use `https://kleithegreat.github.io/counting-study/?test=1`. Test runs are saved as
+  `TEST_...json`, which the analysis ignores. Add `&condition=lottery` or `&condition=fixed` to see each version.
+- Prolific's **Preview** checks the redirect back to Prolific, but it opens the plain study URL, so the run is saved as
+  real data. Afterwards, delete that file from the Google Drive folder. It has the newest timestamp and the
+  previewer's Prolific ID.
 
 ### 5. Soft launch, then full launch
 Publish with 10 places. When they finish, check:
